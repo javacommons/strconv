@@ -1,5 +1,5 @@
 /* strconv.h v1.1.0                */
-/* Last Modified: 2020/12/15 06:26 */
+/* Last Modified: 2020/12/15 07:08 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -130,6 +130,27 @@ static inline std::string format(const char *format, ...)
   _vsnprintf(&buffer[0], len + 1, format, args);
   va_end(args);
   return &buffer[0];
+}
+
+static inline std::string formatA(const wchar_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  int len = _vsnwprintf(nullptr, 0, format, args);
+  std::vector<wchar_t> buffer(len + 1);
+  _vsnwprintf(&buffer[0], len + 1, format, args);
+  va_end(args);
+  return wide_to_ansi(&buffer[0]);
+}
+static inline std::string formatA(const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  int len = _vsnprintf(nullptr, 0, format, args);
+  std::vector<char> buffer(len + 1);
+  _vsnprintf(&buffer[0], len + 1, format, args);
+  va_end(args);
+  return utf8_to_ansi(&buffer[0]);
 }
 #pragma warning(pop)
 
