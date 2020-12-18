@@ -1,11 +1,12 @@
-/* strconv.h v1.2.0                */
-/* Last Modified: 2020/12/18 10:00 */
+/* strconv.h v1.3.0                */
+/* Last Modified: 2020/12/18 12:09 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #if __cplusplus >= 201103L
 static inline std::wstring cp_to_wide(const std::string &s, UINT codepage)
@@ -110,7 +111,7 @@ static inline std::string utf8_to_sjis(const std::string &s)
 }
 
 #pragma warning(push)
-#pragma warning(disable:4996)
+#pragma warning(disable : 4996)
 static inline std::wstring format(const wchar_t *format, ...)
 {
   va_list args;
@@ -132,6 +133,27 @@ static inline std::string format(const char *format, ...)
   return &buffer[0];
 }
 
+static inline void format(std::wostream& ostrm, const wchar_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  int len = _vsnwprintf(nullptr, 0, format, args);
+  std::vector<wchar_t> buffer(len + 1);
+  _vsnwprintf(&buffer[0], len + 1, format, args);
+  va_end(args);
+  ostrm << &buffer[0] << std::flush;
+}
+static inline void format(std::ostream& ostrm, const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  int len = _vsnprintf(nullptr, 0, format, args);
+  std::vector<char> buffer(len + 1);
+  _vsnprintf(&buffer[0], len + 1, format, args);
+  va_end(args);
+  ostrm << &buffer[0] << std::flush;
+}
+
 static inline std::string formatA(const wchar_t *format, ...)
 {
   va_list args;
@@ -151,6 +173,27 @@ static inline std::string formatA(const char *format, ...)
   _vsnprintf(&buffer[0], len + 1, format, args);
   va_end(args);
   return utf8_to_ansi(&buffer[0]);
+}
+
+static inline void formatA(std::ostream& ostrm, const wchar_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  int len = _vsnwprintf(nullptr, 0, format, args);
+  std::vector<wchar_t> buffer(len + 1);
+  _vsnwprintf(&buffer[0], len + 1, format, args);
+  va_end(args);
+  ostrm << wide_to_ansi(&buffer[0]) << std::flush;
+}
+static inline void formatA(std::ostream& ostrm, const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  int len = _vsnprintf(nullptr, 0, format, args);
+  std::vector<char> buffer(len + 1);
+  _vsnprintf(&buffer[0], len + 1, format, args);
+  va_end(args);
+  ostrm << utf8_to_ansi(&buffer[0]) << std::flush;
 }
 #pragma warning(pop)
 
