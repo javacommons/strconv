@@ -1,5 +1,5 @@
-/* strconv.h v1.3.0                */
-/* Last Modified: 2020/12/18 12:09 */
+/* strconv.h v1.3.1                */
+/* Last Modified: 2020/12/18 14:05 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -133,7 +133,7 @@ static inline std::string format(const char *format, ...)
   return &buffer[0];
 }
 
-static inline void format(std::wostream& ostrm, const wchar_t *format, ...)
+static inline void format(std::ostream& ostrm, const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
@@ -141,7 +141,7 @@ static inline void format(std::wostream& ostrm, const wchar_t *format, ...)
   std::vector<wchar_t> buffer(len + 1);
   _vsnwprintf(&buffer[0], len + 1, format, args);
   va_end(args);
-  ostrm << &buffer[0] << std::flush;
+  ostrm << wide_to_utf8(&buffer[0]) << std::flush;
 }
 static inline void format(std::ostream& ostrm, const char *format, ...)
 {
