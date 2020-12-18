@@ -1,5 +1,5 @@
-/* strconv.h v1.1.1                */
-/* Last Modified: 2020/12/15 07:08 */
+/* strconv.h v1.2.0                */
+/* Last Modified: 2020/12/18 10:00 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -153,5 +153,8 @@ static inline std::string formatA(const char *format, ...)
   return utf8_to_ansi(&buffer[0]);
 }
 #pragma warning(pop)
+
+#define U8(X) ((const char *)u8##X)
+#define WIDE(X) L##X
 
 #endif /* STRCONV_H */
