@@ -1,5 +1,5 @@
-/* strconv.h v1.3.1                */
-/* Last Modified: 2020/12/18 14:05 */
+/* strconv.h v1.3.2                */
+/* Last Modified: 2020/12/18 18:27 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -116,7 +116,7 @@ static inline std::wstring format(const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(nullptr, 0, format, args);
+  int len = _vsnwprintf(0, 0, format, args);
   std::vector<wchar_t> buffer(len + 1);
   _vsnwprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -126,7 +126,7 @@ static inline std::string format(const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(nullptr, 0, format, args);
+  int len = _vsnprintf(0, 0, format, args);
   std::vector<char> buffer(len + 1);
   _vsnprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -137,7 +137,7 @@ static inline void format(std::ostream& ostrm, const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(nullptr, 0, format, args);
+  int len = _vsnwprintf(0, 0, format, args);
   std::vector<wchar_t> buffer(len + 1);
   _vsnwprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -147,7 +147,7 @@ static inline void format(std::ostream& ostrm, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(nullptr, 0, format, args);
+  int len = _vsnprintf(0, 0, format, args);
   std::vector<char> buffer(len + 1);
   _vsnprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -158,7 +158,7 @@ static inline std::string formatA(const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(nullptr, 0, format, args);
+  int len = _vsnwprintf(0, 0, format, args);
   std::vector<wchar_t> buffer(len + 1);
   _vsnwprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -168,7 +168,7 @@ static inline std::string formatA(const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(nullptr, 0, format, args);
+  int len = _vsnprintf(0, 0, format, args);
   std::vector<char> buffer(len + 1);
   _vsnprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -179,7 +179,7 @@ static inline void formatA(std::ostream& ostrm, const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(nullptr, 0, format, args);
+  int len = _vsnwprintf(0, 0, format, args);
   std::vector<wchar_t> buffer(len + 1);
   _vsnwprintf(&buffer[0], len + 1, format, args);
   va_end(args);
@@ -189,7 +189,7 @@ static inline void formatA(std::ostream& ostrm, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(nullptr, 0, format, args);
+  int len = _vsnprintf(0, 0, format, args);
   std::vector<char> buffer(len + 1);
   _vsnprintf(&buffer[0], len + 1, format, args);
   va_end(args);
