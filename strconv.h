@@ -1,5 +1,5 @@
-/* strconv.h v1.3.3                */
-/* Last Modified: 2020/12/20 09:56 */
+/* strconv.h v1.3.4                */
+/* Last Modified: 2020/12/20 15:29 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -115,15 +115,23 @@ static inline std::string utf8_to_sjis(const std::string &s)
 static inline std::wstring vformat(const wchar_t *format, va_list args)
 {
   int len = _vsnwprintf(0, 0, format, args);
+  if (len < 0)
+    return L"";
   std::vector<wchar_t> buffer(len + 1);
-  _vsnwprintf(&buffer[0], len + 1, format, args);
+  len = _vsnwprintf(&buffer[0], len + 1, format, args);
+  if (len < 0)
+    return L"";
   return &buffer[0];
 }
 static inline std::string vformat(const char *format, va_list args)
 {
   int len = _vsnprintf(0, 0, format, args);
+  if (len < 0)
+    return "";
   std::vector<char> buffer(len + 1);
-  _vsnprintf(&buffer[0], len + 1, format, args);
+  len = _vsnprintf(&buffer[0], len + 1, format, args);
+  if (len < 0)
+    return "";
   return &buffer[0];
 }
 
