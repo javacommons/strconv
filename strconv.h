@@ -1,5 +1,5 @@
-/* strconv.h v1.3.2                */
-/* Last Modified: 2020/12/18 18:27 */
+/* strconv.h v1.3.3                */
+/* Last Modified: 2020/12/20 09:56 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -112,88 +112,87 @@ static inline std::string utf8_to_sjis(const std::string &s)
 
 #pragma warning(push)
 #pragma warning(disable : 4996)
+static inline std::wstring vformat(const wchar_t *format, va_list args)
+{
+  int len = _vsnwprintf(0, 0, format, args);
+  std::vector<wchar_t> buffer(len + 1);
+  _vsnwprintf(&buffer[0], len + 1, format, args);
+  return &buffer[0];
+}
+static inline std::string vformat(const char *format, va_list args)
+{
+  int len = _vsnprintf(0, 0, format, args);
+  std::vector<char> buffer(len + 1);
+  _vsnprintf(&buffer[0], len + 1, format, args);
+  return &buffer[0];
+}
+
 static inline std::wstring format(const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(0, 0, format, args);
-  std::vector<wchar_t> buffer(len + 1);
-  _vsnwprintf(&buffer[0], len + 1, format, args);
+  std::wstring s = vformat(format, args);
   va_end(args);
-  return &buffer[0];
+  return s;
 }
 static inline std::string format(const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(0, 0, format, args);
-  std::vector<char> buffer(len + 1);
-  _vsnprintf(&buffer[0], len + 1, format, args);
+  std::string s = vformat(format, args);
   va_end(args);
-  return &buffer[0];
+  return s;
 }
 
-static inline void format(std::ostream& ostrm, const wchar_t *format, ...)
+static inline void format(std::ostream &ostrm, const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(0, 0, format, args);
-  std::vector<wchar_t> buffer(len + 1);
-  _vsnwprintf(&buffer[0], len + 1, format, args);
+  std::wstring s = vformat(format, args);
   va_end(args);
-  ostrm << wide_to_utf8(&buffer[0]) << std::flush;
+  ostrm << wide_to_utf8(s) << std::flush;
 }
-static inline void format(std::ostream& ostrm, const char *format, ...)
+static inline void format(std::ostream &ostrm, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(0, 0, format, args);
-  std::vector<char> buffer(len + 1);
-  _vsnprintf(&buffer[0], len + 1, format, args);
+  std::string s = vformat(format, args);
   va_end(args);
-  ostrm << &buffer[0] << std::flush;
+  ostrm << s << std::flush;
 }
 
 static inline std::string formatA(const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(0, 0, format, args);
-  std::vector<wchar_t> buffer(len + 1);
-  _vsnwprintf(&buffer[0], len + 1, format, args);
+  std::wstring s = vformat(format, args);
   va_end(args);
-  return wide_to_ansi(&buffer[0]);
+  return wide_to_ansi(s);
 }
 static inline std::string formatA(const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(0, 0, format, args);
-  std::vector<char> buffer(len + 1);
-  _vsnprintf(&buffer[0], len + 1, format, args);
+  std::string s = vformat(format, args);
   va_end(args);
-  return utf8_to_ansi(&buffer[0]);
+  return utf8_to_ansi(s);
 }
 
-static inline void formatA(std::ostream& ostrm, const wchar_t *format, ...)
+static inline void formatA(std::ostream &ostrm, const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnwprintf(0, 0, format, args);
-  std::vector<wchar_t> buffer(len + 1);
-  _vsnwprintf(&buffer[0], len + 1, format, args);
+  std::wstring s = vformat(format, args);
   va_end(args);
-  ostrm << wide_to_ansi(&buffer[0]) << std::flush;
+  ostrm << wide_to_ansi(s) << std::flush;
 }
-static inline void formatA(std::ostream& ostrm, const char *format, ...)
+static inline void formatA(std::ostream &ostrm, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
-  int len = _vsnprintf(0, 0, format, args);
-  std::vector<char> buffer(len + 1);
-  _vsnprintf(&buffer[0], len + 1, format, args);
+  std::string s = vformat(format, args);
   va_end(args);
-  ostrm << utf8_to_ansi(&buffer[0]) << std::flush;
+  ostrm << utf8_to_ansi(s) << std::flush;
 }
 #pragma warning(pop)
 
