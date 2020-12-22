@@ -1,5 +1,5 @@
-/* strconv.h v1.4.0                */
-/* Last Modified: 2020/12/22 10:00 */
+/* strconv.h v1.5.0                */
+/* Last Modified: 2020/12/23 06:30 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -204,58 +204,59 @@ static inline void formatA(std::ostream &ostrm, const char *format, ...)
 }
 #pragma warning(pop)
 
-class ansi_ostream
+class unicode_ostream
 {
 private:
   std::ostream &m_ostrm;
+  UINT m_display_cp;
 
 public:
-  ansi_ostream(std::ostream &ostrm) : m_ostrm(ostrm) {}
+  unicode_ostream(std::ostream &ostrm, UINT display_cp = CP_ACP) : m_ostrm(ostrm), m_display_cp(display_cp) {}
   template <typename T>
-  ansi_ostream &operator<<(const T &x)
+  unicode_ostream &operator<<(const T &x)
   {
     m_ostrm << x;
     return *this;
   }
-  ansi_ostream &operator<<(const std::wstring &x)
+  unicode_ostream &operator<<(const std::wstring &x)
   {
-    m_ostrm << wide_to_ansi(x);
+    m_ostrm << wide_to_cp(x, m_display_cp);
     return *this;
   }
-  ansi_ostream &operator<<(const wchar_t *x)
+  unicode_ostream &operator<<(const wchar_t *x)
   {
-    m_ostrm << wide_to_ansi(x);
+    m_ostrm << wide_to_cp(x, m_display_cp);
     return *this;
   }
-  ansi_ostream &operator<<(const std::string &x)
+  unicode_ostream &operator<<(const std::string &x)
   {
-    m_ostrm << utf8_to_ansi(x);
+    m_ostrm << utf8_to_cp(x, m_display_cp);
     return *this;
   }
-  ansi_ostream &operator<<(const char *x)
+  unicode_ostream &operator<<(const char *x)
   {
-    m_ostrm << utf8_to_ansi(x);
+    m_ostrm << utf8_to_cp(x, m_display_cp);
     return *this;
   }
 #ifdef __cpp_char8_t
-  ansi_ostream &operator<<(const std::u8string &x)
+  unicode_ostream &operator<<(const std::u8string &x)
   {
     std::string s(x.begin(), x.end());
-    m_ostrm << utf8_to_ansi(s);
+    m_ostrm << utf8_to_cp(s, m_display_cp);
     return *this;
   }
-  ansi_ostream &operator<<(const char8_t *x)
+  unicode_ostream &operator<<(const char8_t *x)
   {
-    m_ostrm << utf8_to_ansi((const char *)x);
+    m_ostrm << utf8_to_cp((const char *)x, m_display_cp);
     return *this;
   }
 #endif
-  ansi_ostream &operator<<(std::ostream &(*pf)(std::ostream &)) // For manipulators...
+  unicode_ostream &operator<<(std::ostream &(*pf)(std::ostream &)) // For manipulators...
   {
     m_ostrm << pf;
     return *this;
   }
-  ansi_ostream &operator<<(std::basic_ios<char> &(*pf)(std::basic_ios<char> &)) // For manipulators...
+  unicode_ostream &operator<<(std::basic_ios<char> &(*pf)(std::basic_ios<char> &)) // For manipulators...
   {
     m_ostrm << pf;
     return *this;
