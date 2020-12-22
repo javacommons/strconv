@@ -1,5 +1,5 @@
-/* strconv.h v1.3.4                */
-/* Last Modified: 2020/12/20 15:29 */
+/* strconv.h v1.4.0                */
+/* Last Modified: 2020/12/22 10:00 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -204,7 +204,65 @@ static inline void formatA(std::ostream &ostrm, const char *format, ...)
 }
 #pragma warning(pop)
 
+class ansi_ostream
+{
+private:
+  std::ostream &m_ostrm;
+
+public:
+  ansi_ostream(std::ostream &ostrm) : m_ostrm(ostrm) {}
+  template <typename T>
+  ansi_ostream &operator<<(const T &x)
+  {
+    m_ostrm << x;
+    return *this;
+  }
+  ansi_ostream &operator<<(const std::wstring &x)
+  {
+    m_ostrm << wide_to_ansi(x);
+    return *this;
+  }
+  ansi_ostream &operator<<(const wchar_t *x)
+  {
+    m_ostrm << wide_to_ansi(x);
+    return *this;
+  }
+  ansi_ostream &operator<<(const std::string &x)
+  {
+    m_ostrm << utf8_to_ansi(x);
+    return *this;
+  }
+  ansi_ostream &operator<<(const char *x)
+  {
+    m_ostrm << utf8_to_ansi(x);
+    return *this;
+  }
+#ifdef __cpp_char8_t
+  ansi_ostream &operator<<(const std::u8string &x)
+  {
+    std::string s(x.begin(), x.end());
+    m_ostrm << utf8_to_ansi(s);
+    return *this;
+  }
+  ansi_ostream &operator<<(const char8_t *x)
+  {
+    m_ostrm << utf8_to_ansi((const char *)x);
+    return *this;
+  }
+#endif
+  ansi_ostream &operator<<(std::ostream &(*pf)(std::ostream &)) // For manipulators...
+  {
+    m_ostrm << pf;
+    return *this;
+  }
+  ansi_ostream &operator<<(std::basic_ios<char> &(*pf)(std::basic_ios<char> &)) // For manipulators...
+  {
+    m_ostrm << pf;
+    return *this;
+  }
+};
+
 #define U8(X) ((const char *)u8##X)
-#define WIDE(X) L##X
+#define WIDE(X) (L##X)
 
 #endif /* STRCONV_H */
