@@ -1,5 +1,5 @@
-/* strconv.h v1.6.2                */
-/* Last Modified: 2020/12/23 16:31 */
+/* strconv.h v1.7.0                */
+/* Last Modified: 2020/12/23 19:02 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -154,8 +154,11 @@ static inline std::string char8_to_utf8(const std::u8string &s)
 }
 #endif
 
+#if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable : 4996)
+#endif
+
 static inline std::wstring vformat(const wchar_t *format, va_list args)
 {
   int len = _vsnwprintf(0, 0, format, args);
@@ -190,6 +193,10 @@ static inline std::string vformat(const char8_t *format, va_list args)
     return "";
   return &buffer[0];
 }
+#endif
+
+#if defined(_MSC_VER)
+#pragma warning(pop)
 #endif
 
 static inline std::wstring format(const wchar_t *format, ...)
@@ -299,7 +306,6 @@ static inline void formatA(std::ostream &ostrm, const char8_t *format, ...)
   ostrm << utf8_to_ansi(s) << std::flush;
 }
 #endif
-#pragma warning(pop)
 
 class unicode_ostream
 {
