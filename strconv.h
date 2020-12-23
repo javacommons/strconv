@@ -1,5 +1,5 @@
-/* strconv.h v1.6.1                */
-/* Last Modified: 2020/12/23 13:32 */
+/* strconv.h v1.6.2                */
+/* Last Modified: 2020/12/23 16:31 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -178,6 +178,19 @@ static inline std::string vformat(const char *format, va_list args)
     return "";
   return &buffer[0];
 }
+#ifdef __cpp_char8_t
+static inline std::string vformat(const char8_t *format, va_list args)
+{
+  int len = _vsnprintf(0, 0, (const char *)format, args);
+  if (len < 0)
+    return "";
+  std::vector<char> buffer(len + 1);
+  len = _vsnprintf(&buffer[0], len + 1, (const char *)format, args);
+  if (len < 0)
+    return "";
+  return &buffer[0];
+}
+#endif
 
 static inline std::wstring format(const wchar_t *format, ...)
 {
@@ -195,6 +208,16 @@ static inline std::string format(const char *format, ...)
   va_end(args);
   return s;
 }
+#ifdef __cpp_char8_t
+static inline std::string format(const char8_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  return s;
+}
+#endif
 
 static inline void format(std::ostream &ostrm, const wchar_t *format, ...)
 {
@@ -212,6 +235,16 @@ static inline void format(std::ostream &ostrm, const char *format, ...)
   va_end(args);
   ostrm << s << std::flush;
 }
+#ifdef __cpp_char8_t
+static inline void format(std::ostream &ostrm, const char8_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  ostrm << s << std::flush;
+}
+#endif
 
 static inline std::string formatA(const wchar_t *format, ...)
 {
@@ -229,6 +262,16 @@ static inline std::string formatA(const char *format, ...)
   va_end(args);
   return utf8_to_ansi(s);
 }
+#ifdef __cpp_char8_t
+static inline std::string formatA(const char8_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  return utf8_to_ansi(s);
+}
+#endif
 
 static inline void formatA(std::ostream &ostrm, const wchar_t *format, ...)
 {
@@ -246,6 +289,16 @@ static inline void formatA(std::ostream &ostrm, const char *format, ...)
   va_end(args);
   ostrm << utf8_to_ansi(s) << std::flush;
 }
+#ifdef __cpp_char8_t
+static inline void formatA(std::ostream &ostrm, const char8_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  ostrm << utf8_to_ansi(s) << std::flush;
+}
+#endif
 #pragma warning(pop)
 
 class unicode_ostream
