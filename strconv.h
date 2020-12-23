@@ -1,5 +1,5 @@
-/* strconv.h v1.6.0                */
-/* Last Modified: 2020/12/23 13:00 */
+/* strconv.h v1.6.1                */
+/* Last Modified: 2020/12/23 13:32 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -142,6 +142,15 @@ static inline std::string char8_to_sjis(const std::u8string &s)
 {
   std::string s2(s.begin(), s.end());
   return utf8_to_cp(s2, 932);
+}
+
+static inline std::u8string utf8_to_char8(const std::string &s)
+{
+  return std::u8string(s.begin(), s.end());
+}
+static inline std::string char8_to_utf8(const std::u8string &s)
+{
+  return std::string(s.begin(), s.end());
 }
 #endif
 
