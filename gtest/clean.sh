@@ -1,0 +1,12 @@
+#! bash -uvx
+rm -f *.gcov
+rm -rf info.tmp
+rm -rf *.png
+rm -rf *.lcov.info
+rm -f *.exe
+rm -f *.css
+rm -rf gtest
+rm -rf c
+rm -rf c++
+rm -f *.gcda
+rm -f *.gcno

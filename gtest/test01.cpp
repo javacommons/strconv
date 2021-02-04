@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../strconv.h"
+#include "strconv.h"
 #include "str-md5.h"
 
 TEST(MyTestCase, Test001) { // ansi <--> wide
