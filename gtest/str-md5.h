@@ -1,11 +1,5 @@
-// https://a4dosanddos.hatenablog.com/entry/2015/03/01/191730
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <openssl/md5.h>
-
 #include <string>
-#include <iostream>
 
 std::string md5(const void *data, unsigned long len)
 {
@@ -57,16 +51,3 @@ std::string md5(const std::u8string &s)
     return md5((const void *)s.c_str(), s.length());
 }
 #endif
-
-
-#include "gtest/gtest.h"
-
-TEST(MyTestCase, TestMd5Wide) {
-    EXPECT_EQ("ea703e7aa1efda0064eaa507d9e8ab7e", md5("hoge"));
-}
-TEST(MyTestCase, TestMd5) {
-    EXPECT_EQ("b6b439042fa9f95648b929a869b3f95d", md5(L"hoge"));
-}
-TEST(MyTestCase, TestMd5U8) {
-    EXPECT_EQ("ea703e7aa1efda0064eaa507d9e8ab7e", md5(u8"hoge"));
-}
