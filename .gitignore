@@ -6,6 +6,9 @@
 *.egg-info
 *.exe
 *.filters
+*.gcda
+*.gcno
+*.gcov
 *.htm
 *.idb
 *.ilk
