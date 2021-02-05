@@ -12,7 +12,7 @@
 *.htm
 *.idb
 *.ilk
-*.lcov.info
+*.lcov
 *.make
 *.o
 *.obj

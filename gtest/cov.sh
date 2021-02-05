@@ -10,6 +10,8 @@ g++ -std=c++20 -fprofile-arcs -ftest-coverage -o test01 test01.cpp -lgtest_main 
 ./test01.exe
 gcov test01.gcda
 #code strconv.h.gcov
-lcov -c -d . -o test01.lcov.info
-genhtml test01.lcov.info -o ./info.tmp
+#lcov -c -d . -o test01.lcov.info
+#genhtml test01.lcov.info -o ./info.tmp
+lcov -c -d . -o test01.lcov
+genhtml test01.lcov -o ./info.tmp
 start info.tmp/include/strconv.h.gcov.html
