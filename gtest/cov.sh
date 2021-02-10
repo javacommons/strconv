@@ -14,4 +14,5 @@ gcov test01.gcda
 #genhtml test01.lcov.info -o ./info.tmp
 lcov -c -d . -o test01.lcov
 genhtml test01.lcov -o ./info.tmp
-start info.tmp/include/strconv.h.gcov.html
+#start info.tmp/include/strconv.h.gcov.html
+start info.tmp/c/Users/javac/.software/msys64/mingw32/include/strconv.h.gcov.html

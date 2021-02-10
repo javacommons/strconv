@@ -2,6 +2,9 @@
 #include "strconv.h"
 #include "str-md5.h"
 
+#include <string>
+#include <sstream>
+
 TEST(MyTestCase, Test001) { // ansi <--> wide
     std::wstring ws = L"string漢字=한자";
     std::string ansi = wide_to_ansi(ws);
@@ -60,4 +63,24 @@ TEST(MyTestCase, Test007) { // utf8 <--> char8
     std::u8string char8b = utf8_to_char8(utf8);
     EXPECT_EQ(U8("string漢字=한자"), std::string((const char*)utf8.c_str()));
 #endif
+}
+TEST(MyTestCase, Test008) { // utf8 <--> utf8
+    std::string utf8 = U8("string漢字=한자");
+    std::string utf8b = cp_to_utf8(utf8, CP_UTF8);
+    EXPECT_EQ(U8("string漢字=한자"), utf8b);
+    std::string utf8c = utf8_to_cp(utf8, CP_UTF8);
+    EXPECT_EQ(U8("string漢字=한자"), utf8c);
+}
+TEST(MyTestCase, Test009) { // vformat (1)
+    std::string utf8 = U8("string漢字=한자");
+    std::string msg = format("msg: %s", utf8.c_str());
+    EXPECT_EQ(U8("msg: string漢字=한자"), msg);
+}
+TEST(MyTestCase, Test010) { // unicode_ostream (1)
+    std::stringstream ss;
+    unicode_ostream aout(ss);
+    std::string utf8 = U8("string漢字=한자");
+    aout << utf8;
+    std::string msg = ss.str();
+    EXPECT_EQ("string\x8A\xBF\x8E\x9A=??", msg);
 }
