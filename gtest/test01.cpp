@@ -12,7 +12,7 @@ TEST(MyTestCase, Test002) { // sjis <--> wide
     std::wstring ws = L"string漢字=한자";
     std::string sjis = wide_to_sjis(ws);
     EXPECT_EQ("string\x8A\xBF\x8E\x9A=??", sjis);
-    EXPECT_EQ(L"string漢字=??", ansi_to_wide(sjis));
+    EXPECT_EQ(L"string漢字=??", sjis_to_wide(sjis));
 }
 TEST(MyTestCase, Test003) {
     EXPECT_EQ("d2963cadb891061db3454921e70dad0f", md5(utf8_to_wide(U8("string漢字=한자"))));
@@ -50,5 +50,14 @@ TEST(MyTestCase, Test006) { // sjis <--> utf8
     EXPECT_EQ("string\x8A\xBF\x8E\x9A=??", sjis);
     EXPECT_EQ(U8("string漢字=??"), char8_to_utf8(sjis_to_char8(sjis)));
     EXPECT_EQ("83aba05703b74f191eb49687fe3cc510", md5(sjis_to_char8(sjis)));
+#endif
+}
+TEST(MyTestCase, Test007) { // utf8 <--> char8
+#ifdef __cpp_char8_t
+    std::u8string char8 = u8"string漢字=한자";
+    std::string utf8 = char8_to_utf8(char8);
+    EXPECT_EQ(U8("string漢字=한자"), utf8);
+    std::u8string char8b = utf8_to_char8(utf8);
+    EXPECT_EQ(U8("string漢字=한자"), std::string((const char*)utf8.c_str()));
 #endif
 }
