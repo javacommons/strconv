@@ -4,6 +4,7 @@
 
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 TEST(MyTestCase, Test001) { // ansi <--> wide
     std::wstring ws = L"string漢字=한자";
@@ -196,4 +197,19 @@ TEST(MyTestCase, Test018) { // unicode_ostream (6)
     std::string msg = ss.str();
     EXPECT_EQ("1234u8string漢字=한자char8漢字=한자", msg);
 #endif
+}
+TEST(MyTestCase, Test019) { // unicode_ostream (7)
+    using namespace std;
+    std::stringstream ss;
+    unicode_ostream aout(ss);
+    double A = 100;
+    double B = 2001.5251;
+    aout << hex << left << showbase << nouppercase;
+    aout << (long long)A << endl;
+    aout << setbase(10) << right << setw(15)
+         << setfill('_') << showpos
+         << fixed << setprecision(2);
+    aout << B << endl;
+    std::string msg = ss.str();
+    EXPECT_EQ("0x64\n_______+2001.53\n", msg);
 }
