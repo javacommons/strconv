@@ -75,6 +75,14 @@ TEST(MyTestCase, Test009) { // vformat (1)
     std::string utf8 = U8("string漢字=한자");
     std::string msg = format("msg: %s", utf8.c_str());
     EXPECT_EQ(U8("msg: string漢字=한자"), msg);
+    std::wstring wide = WIDE("string漢字=한자");
+    std::wstring msgw = format(L"msg: %s", wide.c_str());
+    EXPECT_EQ(WIDE("msg: string漢字=한자"), msgw);
+#ifdef __cpp_char8_t
+    std::u8string char8 = u8"string漢字=한자";
+    std::string msgc8 = format(u8"msg: %s", char8.c_str());
+    EXPECT_EQ(U8("msg: string漢字=한자"), msgc8);
+#endif
 }
 TEST(MyTestCase, Test010) { // unicode_ostream (1)
     std::stringstream ss;
