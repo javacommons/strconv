@@ -1,4 +1,4 @@
-/* strconv.h v1.7.1                */
+/* strconv.h v1.7.2                */
 /* Last Modified: 2021/02/11 15:04 */
 #ifndef STRCONV_H
 #define STRCONV_H
