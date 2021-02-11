@@ -1,5 +1,5 @@
-/* strconv.h v1.7.2                */
-/* Last Modified: 2021/02/11 15:04 */
+/* strconv.h v1.7.3                */
+/* Last Modified: 2021/02/11 17:54 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -8,7 +8,7 @@
 #include <vector>
 #include <iostream>
 
-#if __cplusplus >= 201103L
+#if __cplusplus >= 201103L && !defined(STRCONV_CPP98)
 static inline std::wstring cp_to_wide(const std::string &s, UINT codepage)
 {
   int in_length = (int)s.length();
