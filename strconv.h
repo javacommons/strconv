@@ -1,5 +1,5 @@
 /* strconv.h v1.7.1                */
-/* Last Modified: 2021/02/11 07:12 */
+/* Last Modified: 2021/02/11 15:04 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -122,13 +122,11 @@ static inline std::string char8_to_utf8(const std::u8string &s)
 
 static inline std::wstring char8_to_wide(const std::u8string &s)
 {
-  std::string s2(s.begin(), s.end());
-  return cp_to_wide(s2, CP_UTF8);
+  return cp_to_wide(char8_to_utf8(s), CP_UTF8);
 }
 static inline std::u8string wide_to_char8(const std::wstring &s)
 {
-  std::string s2 = wide_to_cp(s, CP_UTF8);
-  return std::u8string(s2.begin(), s2.end());
+  return utf8_to_char8(wide_to_cp(s, CP_UTF8));
 }
 
 static inline std::u8string cp_to_char8(const std::string &s, UINT codepage)
