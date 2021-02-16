@@ -213,3 +213,11 @@ TEST(MyTestCase, Test019) { // unicode_ostream (7)
     std::string msg = ss.str();
     EXPECT_EQ("0x64\n_______+2001.53\n", msg);
 }
+TEST(MyTestCase, Test020) { // unicode_ostream (8)
+    using namespace std;
+    std::stringstream ss;
+    unicode_ostream aout(ss);
+    aout << "A" << 'b' << 'C';
+    std::string msg = ss.str();
+    EXPECT_EQ("AbC", msg);
+}
