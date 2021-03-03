@@ -6,6 +6,8 @@
 #include <sstream>
 #include <iomanip>
 
+#include <nlohmann/json.hpp>
+
 TEST(MyTestCase, Test001) { // ansi <--> wide
     std::wstring ws = L"string漢字=한자";
     std::string ansi = wide_to_ansi(ws);
@@ -220,4 +222,15 @@ TEST(MyTestCase, Test020) { // unicode_ostream (8)
     aout << "A" << 'b' << 'C';
     std::string msg = ss.str();
     EXPECT_EQ("AbC", msg);
+}
+TEST(MyTestCase, Test021) { // nlohmann
+    using namespace std;
+    using namespace nlohmann;
+    json j;
+    j["a"] = "漢字=한자";
+    std::stringstream ss;
+    unicode_ostream aout(ss, CP_UTF8);
+    aout << j.dump();
+    std::string msg = ss.str();
+    EXPECT_EQ("{\"a\":\"漢字=한자\"}", msg);
 }

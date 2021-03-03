@@ -5,7 +5,8 @@ pacman -S --needed --noconfirm \
 	$MINGW_PACKAGE_PREFIX-lcov \
 	$MINGW_PACKAGE_PREFIX-openssl
 
-cp -p ../strconv.h $MINGW_PREFIX/include/
+#cp -p ../strconv.h $MINGW_PREFIX/include/
+bash -uvx ./inst.sh
 
 rm -f test01.exe test01.gcda
 g++ -std=c++20 -fprofile-arcs -ftest-coverage -o test01 test01.cpp -lgtest_main -lgtest -lcrypto
