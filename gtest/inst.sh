@@ -1,4 +1,6 @@
 #! bash -uvx
+pacman -S --needed --noconfirm \
+	subversion
 cp -p ../strconv.h $MINGW_PREFIX/include/
 if [ ! -e nlohmann ]; then
   svn export https://github.com/nlohmann/json/trunk/include/nlohmann
