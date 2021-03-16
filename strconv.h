@@ -1,5 +1,5 @@
-/* strconv.h v1.7.3                */
-/* Last Modified: 2021/02/11 17:54 */
+/* strconv.h v1.7.4                */
+/* Last Modified: 2021/03/17 00:17 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -171,6 +171,7 @@ static inline std::wstring vformat(const wchar_t *format, va_list args)
   len = _vsnwprintf(&buffer[0], len + 1, format, args);
   if (len < 0)
     return L"";
+  buffer[len] = L'\0';
   return &buffer[0];
 }
 static inline std::string vformat(const char *format, va_list args)
@@ -182,6 +183,7 @@ static inline std::string vformat(const char *format, va_list args)
   len = _vsnprintf(&buffer[0], len + 1, format, args);
   if (len < 0)
     return "";
+  buffer[len] = '\0';
   return &buffer[0];
 }
 #ifdef __cpp_char8_t
@@ -194,6 +196,7 @@ static inline std::string vformat(const char8_t *format, va_list args)
   len = _vsnprintf(&buffer[0], len + 1, (const char *)format, args);
   if (len < 0)
     return "";
+  buffer[len] = '\0';
   return &buffer[0];
 }
 #endif
