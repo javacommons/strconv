@@ -1,11 +1,4 @@
 #! bash -uvx
-pacman -S --needed --noconfirm \
-	$MINGW_PACKAGE_PREFIX-toolchain \
-	$MINGW_PACKAGE_PREFIX-gtest \
-	$MINGW_PACKAGE_PREFIX-lcov \
-	$MINGW_PACKAGE_PREFIX-openssl
-
-#cp -p ../strconv.h $MINGW_PREFIX/include/
 bash -uvx ./inst.sh
 
 rm -f test01.exe test01.gcda
