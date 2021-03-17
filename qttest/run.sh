@@ -1,3 +1,3 @@
 #! bash -uvx
 ./inst.sh
-qmake qttest.pro && make && release/qttest.exe
+qmake qttest.pro && make clean && make && release/qttest.exe
