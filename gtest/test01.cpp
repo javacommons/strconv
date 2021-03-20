@@ -232,3 +232,14 @@ TEST(MyTestCase, Test021) { // nlohmann
     std::string msg = ss.str();
     EXPECT_EQ(U8("{\"a\":\"漢字=한자\"}"), msg);
 }
+TEST(MyTestCase, Test022) { // nlohmann
+    using namespace std;
+    using namespace nlohmann;
+    json j;
+    j["a"] = U8("漢字=한자");
+    std::stringstream ss;
+    unicode_ostream aout(ss, CP_UTF8);
+    aout << j;
+    std::string msg = ss.str();
+    EXPECT_EQ(U8("{\"a\":\"漢字=한자\"}"), msg);
+}
