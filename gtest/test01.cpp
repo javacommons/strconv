@@ -1,6 +1,6 @@
-#include "gtest/gtest.h"
+﻿#include "gtest/gtest.h"
 #include "strconv.h"
-#include "str-md5.h"
+//#include "str-md5.h"
 
 #include <string>
 #include <sstream>
@@ -21,15 +21,15 @@ TEST(MyTestCase, Test002) { // sjis <--> wide
     EXPECT_EQ(L"string漢字=??", sjis_to_wide(sjis));
 }
 TEST(MyTestCase, Test003) {
-    EXPECT_EQ("d2963cadb891061db3454921e70dad0f", md5(utf8_to_wide(U8("string漢字=한자"))));
+    EXPECT_EQ(L"string漢字=한자", utf8_to_wide(U8("string漢字=한자")));
 #ifdef __cpp_char8_t
-    EXPECT_EQ("d2963cadb891061db3454921e70dad0f", md5(char8_to_wide(u8"string漢字=한자")));
+    EXPECT_EQ(L"string漢字=한자", char8_to_wide(u8"string漢字=한자"));
 #endif
 }
 TEST(MyTestCase, Test004) {
-    EXPECT_EQ("bff149abecaa1998db2c8fd3f5c9ef9e", md5(wide_to_utf8(L"string漢字=한자")));
+    EXPECT_EQ(U8("string漢字=한자"), wide_to_utf8(L"string漢字=한자"));
 #ifdef __cpp_char8_t
-    EXPECT_EQ("bff149abecaa1998db2c8fd3f5c9ef9e", md5(wide_to_char8(L"string漢字=한자")));
+    EXPECT_EQ(U8("string漢字=한자"), char8_to_utf8(wide_to_char8(L"string漢字=한자")));
 #endif
 }
 TEST(MyTestCase, Test005) { // ansi <--> utf8
@@ -42,7 +42,6 @@ TEST(MyTestCase, Test005) { // ansi <--> utf8
     ansi = char8_to_ansi(char8);
     EXPECT_EQ("string\x8A\xBF\x8E\x9A=??", ansi);
     EXPECT_EQ(U8("string漢字=??"), char8_to_utf8(ansi_to_char8(ansi)));
-    EXPECT_EQ("83aba05703b74f191eb49687fe3cc510", md5(ansi_to_char8(ansi)));
 #endif
 }
 TEST(MyTestCase, Test006) { // sjis <--> utf8
@@ -55,7 +54,6 @@ TEST(MyTestCase, Test006) { // sjis <--> utf8
     sjis = char8_to_sjis(char8);
     EXPECT_EQ("string\x8A\xBF\x8E\x9A=??", sjis);
     EXPECT_EQ(U8("string漢字=??"), char8_to_utf8(sjis_to_char8(sjis)));
-    EXPECT_EQ("83aba05703b74f191eb49687fe3cc510", md5(sjis_to_char8(sjis)));
 #endif
 }
 TEST(MyTestCase, Test007) { // utf8 <--> char8
@@ -75,7 +73,7 @@ TEST(MyTestCase, Test008) { // utf8 <--> utf8
     EXPECT_EQ(U8("string漢字=한자"), utf8c);
 }
 TEST(MyTestCase, Test009) {
-     // format (1)
+    // format (1)
     std::string utf8 = U8("string漢字=한자");
     std::string msg = format("msg: %s", utf8.c_str());
     EXPECT_EQ(U8("msg: string漢字=한자"), msg);
@@ -109,7 +107,7 @@ TEST(MyTestCase, Test010) {
 #endif
 }
 TEST(MyTestCase, Test011) {
-     // formatA (1)
+    // formatA (1)
     std::string utf8 = U8("string漢字=한자");
     std::string msg = formatA("msg: %s", utf8.c_str());
     EXPECT_EQ("msg: string\x8A\xBF\x8E\x9A=??", msg);
@@ -154,8 +152,8 @@ TEST(MyTestCase, Test013) { // unicode_ostream (1)
 TEST(MyTestCase, Test014) { // unicode_ostream (2)
     std::stringstream ss;
     unicode_ostream aout(ss);
-    const wchar_t *wide = WIDE("wstring漢字=한자");
-    const char *utf8 = U8("string漢字=한자");
+    const wchar_t* wide = WIDE("wstring漢字=한자");
+    const char* utf8 = U8("string漢字=한자");
     aout << 1234 << wide << utf8;
     std::string msg = ss.str();
     EXPECT_EQ("1234wstring\x8A\xBF\x8E\x9A=??string\x8A\xBF\x8E\x9A=??", msg);
@@ -165,7 +163,7 @@ TEST(MyTestCase, Test015) { // unicode_ostream (3)
     std::stringstream ss;
     unicode_ostream aout(ss);
     std::u8string u8str = u8"u8string漢字=한자";
-    const char8_t *char8 = u8"char8漢字=한자";
+    const char8_t* char8 = u8"char8漢字=한자";
     aout << 1234 << u8str << char8;
     std::string msg = ss.str();
     EXPECT_EQ("1234u8string\x8A\xBF\x8E\x9A=??char8\x8A\xBF\x8E\x9A=??", msg);
@@ -178,13 +176,13 @@ TEST(MyTestCase, Test016) { // unicode_ostream (4)
     std::string utf8 = U8("string漢字=한자");
     aout << 1234 << wide << utf8;
     std::string msg = ss.str();
-    EXPECT_EQ("1234wstring漢字=한자string漢字=한자", msg);
+    EXPECT_EQ(U8("1234wstring漢字=한자string漢字=한자"), msg);
 }
 TEST(MyTestCase, Test017) { // unicode_ostream (5)
     std::stringstream ss;
     unicode_ostream aout(ss, CP_UTF8);
-    const wchar_t *wide = WIDE("wstring漢字=한자");
-    const char *utf8 = U8("string漢字=한자");
+    const wchar_t* wide = WIDE("wstring漢字=한자");
+    const char* utf8 = U8("string漢字=한자");
     aout << 1234 << wide << utf8;
     std::string msg = ss.str();
     EXPECT_EQ(U8("1234wstring漢字=한자string漢字=한자"), msg);
@@ -194,10 +192,10 @@ TEST(MyTestCase, Test018) { // unicode_ostream (6)
     std::stringstream ss;
     unicode_ostream aout(ss, CP_UTF8);
     std::u8string u8str = u8"u8string漢字=한자";
-    const char8_t *char8 = u8"char8漢字=한자";
+    const char8_t* char8 = u8"char8漢字=한자";
     aout << 1234 << u8str << char8;
     std::string msg = ss.str();
-    EXPECT_EQ("1234u8string漢字=한자char8漢字=한자", msg);
+    EXPECT_EQ(U8("1234u8string漢字=한자char8漢字=한자"), msg);
 #endif
 }
 TEST(MyTestCase, Test019) { // unicode_ostream (7)
@@ -209,8 +207,8 @@ TEST(MyTestCase, Test019) { // unicode_ostream (7)
     aout << hex << left << showbase << nouppercase;
     aout << (long long)A << endl;
     aout << setbase(10) << right << setw(15)
-         << setfill('_') << showpos
-         << fixed << setprecision(2);
+        << setfill('_') << showpos
+        << fixed << setprecision(2);
     aout << B << endl;
     std::string msg = ss.str();
     EXPECT_EQ("0x64\n_______+2001.53\n", msg);
@@ -227,10 +225,10 @@ TEST(MyTestCase, Test021) { // nlohmann
     using namespace std;
     using namespace nlohmann;
     json j;
-    j["a"] = "漢字=한자";
+    j["a"] = U8("漢字=한자");
     std::stringstream ss;
     unicode_ostream aout(ss, CP_UTF8);
     aout << j.dump();
     std::string msg = ss.str();
-    EXPECT_EQ("{\"a\":\"漢字=한자\"}", msg);
+    EXPECT_EQ(U8("{\"a\":\"漢字=한자\"}"), msg);
 }
