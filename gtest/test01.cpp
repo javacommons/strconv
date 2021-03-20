@@ -1,6 +1,6 @@
 ﻿#include "gtest/gtest.h"
 #include "strconv.h"
-//#include "str-md5.h"
+#include "prettyprint.hpp"
 
 #include <string>
 #include <sstream>
@@ -238,8 +238,18 @@ TEST(MyTestCase, Test022) { // nlohmann
     json j;
     j["a"] = U8("漢字=한자");
     std::stringstream ss;
-    unicode_ostream aout(ss, CP_UTF8);
+    unicode_ostream aout(ss, 932);
     aout << j;
     std::string msg = ss.str();
-    EXPECT_EQ(U8("{\"a\":\"漢字=한자\"}"), msg);
+    EXPECT_EQ("{\"a\":\"\x8A\xBF\x8E\x9A=??\"}", msg);
+}
+TEST(MyTestCase, Test023) { // prettyprint.hpp
+    using namespace std;
+    std::vector<std::string> v;
+    v.push_back(U8("漢字=한자"));
+    std::stringstream ss;
+    unicode_ostream aout(ss, 932);
+    aout << v;
+    std::string msg = ss.str();
+    EXPECT_EQ("[\x8A\xBF\x8E\x9A=??]", msg);
 }

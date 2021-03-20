@@ -1,5 +1,5 @@
-/* strconv.h v2.0.0-beta           */
-/* Last Modified: 2021/03/20 08:42 */
+/* strconv.h v1.7.6                */
+/* Last Modified: 2021/03/20 17:08 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -8,8 +8,8 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
-#include <type_traits>
 
+#if __cplusplus >= 201103L && !defined(STRCONV_CPP98)
 static inline std::wstring cp_to_wide(const std::string &s, UINT codepage)
 {
   int in_length = (int)s.length();
@@ -28,6 +28,28 @@ static inline std::string wide_to_cp(const std::wstring &s, UINT codepage)
     WideCharToMultiByte(codepage, 0, s.c_str(), in_length, &result[0], out_length, 0, 0);
   return result;
 }
+#else /* __cplusplus < 201103L */
+static inline std::wstring cp_to_wide(const std::string &s, UINT codepage)
+{
+  int in_length = (int)s.length();
+  int out_length = MultiByteToWideChar(codepage, 0, s.c_str(), in_length, 0, 0);
+  std::vector<wchar_t> buffer(out_length);
+  if (out_length)
+    MultiByteToWideChar(codepage, 0, s.c_str(), in_length, &buffer[0], out_length);
+  std::wstring result(buffer.begin(), buffer.end());
+  return result;
+}
+static inline std::string wide_to_cp(const std::wstring &s, UINT codepage)
+{
+  int in_length = (int)s.length();
+  int out_length = WideCharToMultiByte(codepage, 0, s.c_str(), in_length, 0, 0, 0, 0);
+  std::vector<char> buffer(out_length);
+  if (out_length)
+    WideCharToMultiByte(codepage, 0, s.c_str(), in_length, &buffer[0], out_length, 0, 0);
+  std::string result(buffer.begin(), buffer.end());
+  return result;
+}
+#endif
 
 static inline std::string cp_to_utf8(const std::string &s, UINT codepage)
 {
@@ -300,13 +322,14 @@ private:
 
 public:
   unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(ostrm), m_target_cp(target_cp) {}
-  template <
-      typename T,
-      typename std::enable_if<
-          !std::is_integral<T>::value && !std::is_floating_point<T>::value>::type * = nullptr>
+  template <typename T>
   unicode_ostream &operator<<(const T &x)
   {
     std::ostringstream oss;
+    oss.flags(m_ostrm.flags());
+    oss.fill(m_ostrm.fill());
+    oss.precision(m_ostrm.precision());
+    oss.width(m_ostrm.width());
     oss << x;
     if (oss.str().empty())
     {
@@ -316,76 +339,6 @@ public:
     {
       m_ostrm << utf8_to_cp(oss.str(), m_target_cp);
     }
-    return *this;
-  }
-  unicode_ostream &operator<<(const char &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const unsigned char &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const short &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const unsigned short &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const int &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const unsigned int &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const long &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const unsigned long &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const long long &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const unsigned long long &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const float &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const double &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const long double &x)
-  {
-    m_ostrm << x;
-    return *this;
-  }
-  unicode_ostream &operator<<(const void *x)
-  {
-    m_ostrm << x;
     return *this;
   }
   unicode_ostream &operator<<(const std::wstring &x)
