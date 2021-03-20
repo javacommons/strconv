@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <sstream>
 #include <type_traits>
 
 static inline std::wstring cp_to_wide(const std::string &s, UINT codepage)
@@ -299,14 +300,10 @@ private:
 
 public:
   unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(ostrm), m_target_cp(target_cp) {}
-#if 0x1
   template <
       typename T,
       typename std::enable_if<
-          !std::is_integral<T>::value && !std::is_floating_point<T>::value &&
-          !std::is_same<T, std::ostream &(*)(std::ostream &)>::value &&
-          !std::is_same<T, std::basic_ios<char> &(*)(std::basic_ios<char> &)>::value>::type * = nullptr>
-#endif
+          !std::is_integral<T>::value && !std::is_floating_point<T>::value>::type * = nullptr>
   unicode_ostream &operator<<(const T &x)
   {
     std::ostringstream oss;
