@@ -1,5 +1,5 @@
-/* strconv.h v1.7.6                */
-/* Last Modified: 2021/03/20 17:08 */
+/* strconv.h v1.7.7                */
+/* Last Modified: 2021/03/21 13:06 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -319,6 +319,16 @@ class unicode_ostream
 private:
   std::ostream &m_ostrm;
   UINT m_target_cp;
+  bool is_ascii(const std::string &s)
+  {
+    for (std::size_t i = 0; i < s.size(); i++)
+    {
+      unsigned char c = (unsigned char)s[i];
+      if (c > 0x7f)
+        return false;
+    }
+    return true;
+  }
 
 public:
   unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(ostrm), m_target_cp(target_cp) {}
@@ -331,7 +341,7 @@ public:
     oss.precision(m_ostrm.precision());
     oss.width(m_ostrm.width());
     oss << x;
-    if (oss.str().empty())
+    if (is_ascii(oss.str()))
     {
       m_ostrm << x;
     }
