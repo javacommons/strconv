@@ -1,5 +1,5 @@
-/* strconv.h v1.7.7                */
-/* Last Modified: 2021/03/21 13:06 */
+/* strconv.h v1.7.8                */
+/* Last Modified: 2021/03/22 10:28 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -336,10 +336,6 @@ public:
   unicode_ostream &operator<<(const T &x)
   {
     std::ostringstream oss;
-    oss.flags(m_ostrm.flags());
-    oss.fill(m_ostrm.fill());
-    oss.precision(m_ostrm.precision());
-    oss.width(m_ostrm.width());
     oss << x;
     if (is_ascii(oss.str()))
     {
