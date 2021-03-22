@@ -1,5 +1,5 @@
-/* strconv.h v1.7.8                */
-/* Last Modified: 2021/03/22 10:28 */
+/* strconv.h v1.7.9                */
+/* Last Modified: 2021/03/22 10:52 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -337,13 +337,14 @@ public:
   {
     std::ostringstream oss;
     oss << x;
-    if (is_ascii(oss.str()))
+    std::string output = oss.str();
+    if (is_ascii(output))
     {
       m_ostrm << x;
     }
     else
     {
-      m_ostrm << utf8_to_cp(oss.str(), m_target_cp);
+      m_ostrm << utf8_to_cp(output, m_target_cp);
     }
     return *this;
   }
