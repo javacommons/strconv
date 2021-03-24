@@ -1,5 +1,5 @@
-/* strconv.h v1.7.9                */
-/* Last Modified: 2021/03/22 10:52 */
+/* strconv.h v1.8.0                */
+/* Last Modified: 2021/03/25 08:21 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -332,6 +332,8 @@ private:
 
 public:
   unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(ostrm), m_target_cp(target_cp) {}
+  UINT target_cp() { return m_target_cp; }
+  void target_cp(UINT cp) { m_target_cp = cp; }
   template <typename T>
   unicode_ostream &operator<<(const T &x)
   {
