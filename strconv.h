@@ -1,5 +1,5 @@
-/* strconv.h v1.8.0                */
-/* Last Modified: 2021/03/25 08:21 */
+/* strconv.h v1.8.1                */
+/* Last Modified: 2021/04/18 06:04 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -317,7 +317,7 @@ static inline void formatA(std::ostream &ostrm, const char8_t *format, ...)
 class unicode_ostream
 {
 private:
-  std::ostream &m_ostrm;
+  std::ostream *m_ostrm;
   UINT m_target_cp;
   bool is_ascii(const std::string &s)
   {
@@ -331,9 +331,11 @@ private:
   }
 
 public:
-  unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(ostrm), m_target_cp(target_cp) {}
+  unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(&ostrm), m_target_cp(target_cp) {}
   UINT target_cp() { return m_target_cp; }
   void target_cp(UINT cp) { m_target_cp = cp; }
+  std::ostream &stream() { return *m_ostrm; }
+  void stream(std::ostream &ostrm) { m_ostrm = &ostrm; }
   template <typename T>
   unicode_ostream &operator<<(const T &x)
   {
@@ -342,54 +344,54 @@ public:
     std::string output = oss.str();
     if (is_ascii(output))
     {
-      m_ostrm << x;
+      (*m_ostrm) << x;
     }
     else
     {
-      m_ostrm << utf8_to_cp(output, m_target_cp);
+      (*m_ostrm) << utf8_to_cp(output, m_target_cp);
     }
     return *this;
   }
   unicode_ostream &operator<<(const std::wstring &x)
   {
-    m_ostrm << wide_to_cp(x, m_target_cp);
+    (*m_ostrm) << wide_to_cp(x, m_target_cp);
     return *this;
   }
   unicode_ostream &operator<<(const wchar_t *x)
   {
-    m_ostrm << wide_to_cp(x, m_target_cp);
+    (*m_ostrm) << wide_to_cp(x, m_target_cp);
     return *this;
   }
   unicode_ostream &operator<<(const std::string &x)
   {
-    m_ostrm << utf8_to_cp(x, m_target_cp);
+    (*m_ostrm) << utf8_to_cp(x, m_target_cp);
     return *this;
   }
   unicode_ostream &operator<<(const char *x)
   {
-    m_ostrm << utf8_to_cp(x, m_target_cp);
+    (*m_ostrm) << utf8_to_cp(x, m_target_cp);
     return *this;
   }
 #ifdef __cpp_char8_t
   unicode_ostream &operator<<(const std::u8string &x)
   {
-    m_ostrm << char8_to_cp(x, m_target_cp);
+    (*m_ostrm) << char8_to_cp(x, m_target_cp);
     return *this;
   }
   unicode_ostream &operator<<(const char8_t *x)
   {
-    m_ostrm << char8_to_cp(x, m_target_cp);
+    (*m_ostrm) << char8_to_cp(x, m_target_cp);
     return *this;
   }
 #endif
   unicode_ostream &operator<<(std::ostream &(*pf)(std::ostream &)) // For manipulators...
   {
-    m_ostrm << pf;
+    (*m_ostrm) << pf;
     return *this;
   }
   unicode_ostream &operator<<(std::basic_ios<char> &(*pf)(std::basic_ios<char> &)) // For manipulators...
   {
-    m_ostrm << pf;
+    (*m_ostrm) << pf;
     return *this;
   }
 };

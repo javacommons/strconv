@@ -253,3 +253,20 @@ TEST(MyTestCase, Test023) { // prettyprint.hpp
     std::string msg = ss.str();
     EXPECT_EQ("[\x8A\xBF\x8E\x9A=??]", msg);
 }
+TEST(MyTestCase, Test024) { // strconv.h v1.81
+    using namespace std;
+    using namespace nlohmann;
+    json j;
+    j["a"] = U8("漢字=한자");
+    std::stringstream ss;
+    unicode_ostream aout(ss, 932);
+    aout << j;
+    std::string msg = ss.str();
+    EXPECT_EQ("{\"a\":\"\x8A\xBF\x8E\x9A=??\"}", msg);
+    std::stringstream ss2;
+    aout.stream(ss2);
+    aout.target_cp(CP_UTF8);
+    aout << j;
+    std::string msg2 = ss2.str();
+    EXPECT_EQ("{\"a\":\"漢字=한자\"}", msg2);
+}
