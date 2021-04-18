@@ -270,3 +270,13 @@ TEST(MyTestCase, Test024) { // strconv.h v1.81
     std::string msg2 = ss2.str();
     EXPECT_EQ("{\"a\":\"漢字=한자\"}", msg2);
 }
+TEST(MyTestCase, Test025) { // strconv.h v1.81
+    using namespace std;
+    using namespace nlohmann;
+    json j;
+    std::stringstream ss;
+    unicode_ostream aout(ss, 932);
+    aout.stream() << utf8_to_cp(U8("漢字=한자"), aout.target_cp());
+    std::string msg = ss.str();
+    EXPECT_EQ("\x8A\xBF\x8E\x9A=??", msg);
+}
