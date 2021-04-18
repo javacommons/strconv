@@ -268,7 +268,7 @@ TEST(MyTestCase, Test024) { // strconv.h v1.81
     aout.target_cp(CP_UTF8);
     aout << j;
     std::string msg2 = ss2.str();
-    EXPECT_EQ("{\"a\":\"漢字=한자\"}", msg2);
+    EXPECT_EQ(U8("{\"a\":\"漢字=한자\"}"), msg2);
 }
 TEST(MyTestCase, Test025) { // strconv.h v1.81
     using namespace std;
