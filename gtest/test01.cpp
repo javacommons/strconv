@@ -1,6 +1,7 @@
 ﻿#include "gtest/gtest.h"
 #include "strconv.h"
 #include "prettyprint.hpp"
+#include "cxxopts.hpp"
 
 #include <string>
 #include <sstream>
@@ -279,4 +280,40 @@ TEST(MyTestCase, Test025) { // strconv.h v1.81
     aout.stream() << utf8_to_cp(U8("漢字=한자"), aout.target_cp());
     std::string msg = ss.str();
     EXPECT_EQ("\x8A\xBF\x8E\x9A=??", msg);
+}
+TEST(MyTestCase, Test026) { // get_wide_args(), get_utf8_args()
+    std::vector<const char *> utf8_args = get_utf8_args();
+    cxxopts::Options options("test", "A brief description");
+    options.add_option("", {"b,bar", "Param bar", cxxopts::value<std::string>()});
+    options.add_option("", {"d,debug", "Enable debugging", cxxopts::value<bool>()->default_value("false")});
+    options.add_option("", {"f,foo", "Param foo", cxxopts::value<int>()->default_value("10")});
+    options.add_option("", {"h,help", "Print usage"});
+    cxxopts::ParseResult result;
+    try
+    {
+        result = options.parse(utf8_args.size(), &utf8_args[0]);
+    }
+    catch (cxxopts::OptionParseException &e)
+    {
+        std::cerr << e.what() << std::endl;
+        std::cerr << options.help() << std::endl;
+        FAIL();
+    }
+    if (result.count("help"))
+    {
+        std::cerr << options.help() << std::endl;
+        FAIL();
+    }
+    bool debug = result["debug"].as<bool>();
+    std::string bar;
+    if (result.count("bar"))
+        bar = result["bar"].as<std::string>();
+    int foo = result["foo"].as<int>();
+
+    std::cout << "debug:" << debug << std::endl;
+    std::cout << "bar:" << bar << std::endl;
+    std::cout << "foo:" << foo << std::endl;
+    EXPECT_EQ(1, debug);
+    EXPECT_EQ(123, foo);
+    EXPECT_EQ(U8("©"), bar);
 }

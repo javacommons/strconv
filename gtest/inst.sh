@@ -4,6 +4,7 @@ pacman -S --needed --noconfirm \
 	$MINGW_PACKAGE_PREFIX-openssl \
 	$MINGW_PACKAGE_PREFIX-nlohmann-json \
 	$MINGW_PACKAGE_PREFIX-gtest \
+	diffutils \
 	lcov \
 	svn
 
@@ -18,3 +19,5 @@ if [ $sts -ne 0 ]; then
 fi
 
 svn export --force https://github.com/louisdx/cxx-prettyprint/trunk/prettyprint.hpp
+
+svn export --force https://github.com/jarro2783/cxxopts/trunk/include/cxxopts.hpp

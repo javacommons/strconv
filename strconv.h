@@ -1,5 +1,5 @@
-/* strconv.h v1.8.3                */
-/* Last Modified: 2021/05/19 19:15 */
+/* strconv.h v1.8.4                */
+/* Last Modified: 2021/05/20 01:58 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -422,6 +422,33 @@ public:
     return *this;
   }
 };
+
+extern "C" void __wgetmainargs(int *, wchar_t ***, wchar_t ***, int, int *);
+std::vector<const wchar_t *> get_wide_args()
+{
+  int argc, si = 0;
+  wchar_t **argv, **env;
+  __wgetmainargs(&argc, &argv, &env, 0, &si);
+  std::vector<const wchar_t *> result;
+  for (int i = 0; i < argc; i++)
+  {
+    result.push_back(argv[i]);
+  }
+  return result;
+}
+
+std::vector<const char *> get_utf8_args()
+{
+  int argc, si = 0;
+  wchar_t **argv, **env;
+  __wgetmainargs(&argc, &argv, &env, 0, &si);
+  std::vector<const char *> result;
+  for (int i = 0; i < argc; i++)
+  {
+    result.push_back(strdup(wide_to_utf8(argv[i]).c_str()));
+  }
+  return result;
+}
 
 #define U8(X) ((const char *)u8##X)
 #define WIDE(X) (L##X)

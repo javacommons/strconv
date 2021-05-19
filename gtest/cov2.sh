@@ -3,7 +3,7 @@ bash -uvx ./inst.sh
 
 rm -f test01.exe test01.gcda
 g++ -std=c++20 -DSTRCONV_CPP98 -fprofile-arcs -ftest-coverage -o test01 test01.cpp -lgtest_main -lgtest -lcrypto
-./test01.exe
+./test01.exe --bar © -f 123 -d
 
 gcov test01.gcda
 #code strconv.h.gcov
