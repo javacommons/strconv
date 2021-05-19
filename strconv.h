@@ -1,5 +1,5 @@
-/* strconv.h v1.8.1                */
-/* Last Modified: 2021/04/18 06:04 */
+/* strconv.h v1.8.2                */
+/* Last Modified: 2021/05/19 18:58 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -314,6 +314,36 @@ static inline void formatA(std::ostream &ostrm, const char8_t *format, ...)
 }
 #endif
 
+static inline std::wstring dbgmsg(const wchar_t *title, const wchar_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::wstring s = vformat(format, args);
+  va_end(args);
+  MessageBoxW(0, s.c_str(), title, MB_OK);
+  return s;
+}
+static inline std::string dbgmsg(const char *title, const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  MessageBoxW(0, utf8_to_wide(s).c_str(), utf8_to_wide(title).c_str(), MB_OK);
+  return s;
+}
+#ifdef __cpp_char8_t
+static inline std::string dbgmsg(const char8_t *title, const char8_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  MessageBoxW(0, utf8_to_wide(s).c_str(), char8_to_wide(title).c_str(), MB_OK);
+  return s;
+}
+#endif
+
 class unicode_ostream
 {
 private:
@@ -332,10 +362,10 @@ private:
 
 public:
   unicode_ostream(std::ostream &ostrm, UINT target_cp = CP_ACP) : m_ostrm(&ostrm), m_target_cp(target_cp) {}
-  UINT target_cp() { return m_target_cp; }
-  void target_cp(UINT cp) { m_target_cp = cp; }
   std::ostream &stream() { return *m_ostrm; }
   void stream(std::ostream &ostrm) { m_ostrm = &ostrm; }
+  UINT target_cp() { return m_target_cp; }
+  void target_cp(UINT cp) { m_target_cp = cp; }
   template <typename T>
   unicode_ostream &operator<<(const T &x)
   {
