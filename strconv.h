@@ -1,5 +1,5 @@
-/* strconv.h v1.8.2                */
-/* Last Modified: 2021/05/19 18:58 */
+/* strconv.h v1.8.3                */
+/* Last Modified: 2021/05/19 19:15 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -314,33 +314,30 @@ static inline void formatA(std::ostream &ostrm, const char8_t *format, ...)
 }
 #endif
 
-static inline std::wstring dbgmsg(const wchar_t *title, const wchar_t *format, ...)
+static inline void dbgmsg(const wchar_t *title, const wchar_t *format, ...)
 {
   va_list args;
   va_start(args, format);
   std::wstring s = vformat(format, args);
   va_end(args);
   MessageBoxW(0, s.c_str(), title, MB_OK);
-  return s;
 }
-static inline std::string dbgmsg(const char *title, const char *format, ...)
+static inline void dbgmsg(const char *title, const char *format, ...)
 {
   va_list args;
   va_start(args, format);
   std::string s = vformat(format, args);
   va_end(args);
   MessageBoxW(0, utf8_to_wide(s).c_str(), utf8_to_wide(title).c_str(), MB_OK);
-  return s;
 }
 #ifdef __cpp_char8_t
-static inline std::string dbgmsg(const char8_t *title, const char8_t *format, ...)
+static inline void dbgmsg(const char8_t *title, const char8_t *format, ...)
 {
   va_list args;
   va_start(args, format);
   std::string s = vformat(format, args);
   va_end(args);
   MessageBoxW(0, utf8_to_wide(s).c_str(), char8_to_wide(title).c_str(), MB_OK);
-  return s;
 }
 #endif
 
