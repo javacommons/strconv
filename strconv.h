@@ -1,5 +1,5 @@
-/* strconv.h v1.8.4                */
-/* Last Modified: 2021/05/20 01:58 */
+/* strconv.h v1.8.5                */
+/* Last Modified: 2021/05/21 13:32 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -188,17 +188,17 @@ static inline std::string vformat(const char *format, va_list args)
   return &buffer[0];
 }
 #ifdef __cpp_char8_t
-static inline std::string vformat(const char8_t *format, va_list args)
+static inline std::u8string vformat(const char8_t *format, va_list args)
 {
   int len = _vsnprintf(0, 0, (const char *)format, args);
   if (len < 0)
-    return "";
+    return u8"";
   std::vector<char> buffer(len + 1);
   len = _vsnprintf(&buffer[0], len, (const char *)format, args);
   if (len < 0)
-    return "";
+    return u8"";
   buffer[len] = '\0';
-  return &buffer[0];
+  return (char8_t *)&buffer[0];
 }
 #endif
 
@@ -223,11 +223,11 @@ static inline std::string format(const char *format, ...)
   return s;
 }
 #ifdef __cpp_char8_t
-static inline std::string format(const char8_t *format, ...)
+static inline std::u8string format(const char8_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  std::string s = vformat(format, args);
+  std::u8string s = vformat(format, args);
   va_end(args);
   return s;
 }
@@ -254,9 +254,9 @@ static inline void format(std::ostream &ostrm, const char8_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  std::string s = vformat(format, args);
+  std::u8string s = vformat(format, args);
   va_end(args);
-  ostrm << s << std::flush;
+  ostrm << char8_to_utf8(s) << std::flush;
 }
 #endif
 
@@ -281,9 +281,9 @@ static inline std::string formatA(const char8_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  std::string s = vformat(format, args);
+  std::u8string s = vformat(format, args);
   va_end(args);
-  return utf8_to_ansi(s);
+  return char8_to_ansi(s);
 }
 #endif
 
@@ -308,9 +308,9 @@ static inline void formatA(std::ostream &ostrm, const char8_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  std::string s = vformat(format, args);
+  std::u8string s = vformat(format, args);
   va_end(args);
-  ostrm << utf8_to_ansi(s) << std::flush;
+  ostrm << char8_to_ansi(s) << std::flush;
 }
 #endif
 
@@ -335,9 +335,9 @@ static inline void dbgmsg(const char8_t *title, const char8_t *format, ...)
 {
   va_list args;
   va_start(args, format);
-  std::string s = vformat(format, args);
+  std::u8string s = vformat(format, args);
   va_end(args);
-  MessageBoxW(0, utf8_to_wide(s).c_str(), char8_to_wide(title).c_str(), MB_OK);
+  MessageBoxW(0, char8_to_wide(s).c_str(), char8_to_wide(title).c_str(), MB_OK);
 }
 #endif
 

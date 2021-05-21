@@ -83,8 +83,8 @@ TEST(MyTestCase, Test009) {
     EXPECT_EQ(WIDE("msg: string漢字=한자"), msgw);
 #ifdef __cpp_char8_t
     std::u8string char8 = u8"string漢字=한자";
-    std::string msgc8 = format(u8"msg: %s", char8.c_str());
-    EXPECT_EQ(U8("msg: string漢字=한자"), msgc8);
+    std::u8string msgc8 = format(u8"msg: %s", char8.c_str());
+    EXPECT_EQ(U8("msg: string漢字=한자"), char8_to_utf8(msgc8));
 #endif
 }
 TEST(MyTestCase, Test010) {
