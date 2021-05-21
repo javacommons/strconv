@@ -1,5 +1,5 @@
-/* strconv.h v1.8.5                */
-/* Last Modified: 2021/05/21 13:32 */
+/* strconv.h v1.8.6                */
+/* Last Modified: 2021/05/22 00:51 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -423,6 +423,7 @@ public:
   }
 };
 
+#if 0x0
 extern "C" void __wgetmainargs(int *, wchar_t ***, wchar_t ***, int, int *);
 std::vector<const wchar_t *> get_wide_args()
 {
@@ -449,6 +450,7 @@ std::vector<const char *> get_utf8_args()
   }
   return result;
 }
+#endif
 
 #define U8(X) ((const char *)u8##X)
 #define WIDE(X) (L##X)
