@@ -1,5 +1,6 @@
 ﻿#include "gtest/gtest.h"
 #include "strconv.h"
+#include "strconvEx.h"
 #include "prettyprint.hpp"
 #include "cxxopts.hpp"
 
@@ -281,7 +282,6 @@ TEST(MyTestCase, Test025) { // strconv.h v1.81
     std::string msg = ss.str();
     EXPECT_EQ("\x8A\xBF\x8E\x9A=??", msg);
 }
-#if 0x0
 TEST(MyTestCase, Test026) { // get_wide_args(), get_utf8_args()
     std::vector<const char *> utf8_args = get_utf8_args();
     cxxopts::Options options("test", "A brief description");
@@ -318,4 +318,3 @@ TEST(MyTestCase, Test026) { // get_wide_args(), get_utf8_args()
     EXPECT_EQ(123, foo);
     EXPECT_EQ(U8("©"), bar);
 }
-#endif

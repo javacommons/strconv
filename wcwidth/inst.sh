@@ -7,4 +7,4 @@ pacman -S --needed --noconfirm \
 	lcov \
 	svn
 
-cp -p ../strconv.h $MINGW_PREFIX/include/
+cp -p ../strconv*.h $MINGW_PREFIX/include/

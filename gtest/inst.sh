@@ -8,7 +8,7 @@ pacman -S --needed --noconfirm \
 	lcov \
 	svn
 
-cp -p ../strconv.h $MINGW_PREFIX/include/
+cp -p ../strconv*.h $MINGW_PREFIX/include/
 
 sts=0
 diff -r $MINGW_PREFIX/include/nlohmann ./nlohmann || sts=$?
