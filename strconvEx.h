@@ -1,5 +1,5 @@
-/* strconvQt.h v1.0.0              */
-/* Last Modified: 2021/05/22 15:48 */
+/* strconvEx.h v1.0.1              */
+/* Last Modified: 2021/07/15 01:13 */
 #ifndef STRCONVEX_H
 #define STRCONVEX_H
 
