@@ -1,5 +1,5 @@
-/* strconv.h v1.8.7                */
-/* Last Modified: 2021/05/22 16:41 */
+/* strconv.h v1.8.8                */
+/* Last Modified: 2021/07/29 21:42 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -338,6 +338,103 @@ static inline void dbgmsg(const char8_t *title, const char8_t *format, ...)
   std::u8string s = vformat(format, args);
   va_end(args);
   MessageBoxW(0, char8_to_wide(s).c_str(), char8_to_wide(title).c_str(), MB_OK);
+}
+#endif
+
+static inline HANDLE handle_for_ostream(std::ostream &ostrm)
+{
+  if (&ostrm == &std::cout)
+  {
+    return GetStdHandle(STD_OUTPUT_HANDLE);
+  }
+  else if (&ostrm == &std::cerr)
+  {
+    return GetStdHandle(STD_ERROR_HANDLE);
+  }
+  return INVALID_HANDLE_VALUE;
+}
+static inline void dbgout(std::ostream &ostrm, const wchar_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::wstring ws = vformat(format, args);
+  va_end(args);
+  HANDLE h = handle_for_ostream(ostrm);
+  if (h == INVALID_HANDLE_VALUE)
+  {
+    std::string s = wide_to_utf8(ws);
+    ostrm << s << std::flush;
+    return;
+  }
+  DWORD dwNumberOfCharsWrite;
+  if (GetFileType(h) != FILE_TYPE_CHAR)
+  {
+    std::string s = wide_to_utf8(ws);
+    WriteFile(h, s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
+  }
+  else
+  {
+    WriteConsoleW(h,
+                  ws.c_str(),
+                  (DWORD)ws.size(),
+                  &dwNumberOfCharsWrite,
+                  NULL);
+  }
+}
+static inline void dbgout(std::ostream &ostrm, const char *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::string s = vformat(format, args);
+  va_end(args);
+  HANDLE h = handle_for_ostream(ostrm);
+  if (h == INVALID_HANDLE_VALUE)
+  {
+    ostrm << s << std::flush;
+    return;
+  }
+  DWORD dwNumberOfCharsWrite;
+  if (GetFileType(h) != FILE_TYPE_CHAR)
+  {
+    WriteFile(h, s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
+  }
+  else
+  {
+    std::wstring ws = utf8_to_wide(s);
+    WriteConsoleW(h,
+                  ws.c_str(),
+                  (DWORD)ws.size(),
+                  &dwNumberOfCharsWrite,
+                  NULL);
+  }
+}
+#ifdef __cpp_char8_t
+static inline void dbgout(std::ostream &ostrm, const char8_t *format, ...)
+{
+  va_list args;
+  va_start(args, format);
+  std::u8string s = vformat(format, args);
+  va_end(args);
+  HANDLE h = handle_for_ostream(ostrm);
+  if (h == INVALID_HANDLE_VALUE)
+  {
+    ostrm << char8_to_utf8(s) << std::flush;
+    return;
+  }
+  DWORD dwNumberOfCharsWrite;
+  if (GetFileType(h) != FILE_TYPE_CHAR)
+  {
+    WriteFile(h, (const char *)s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
+  }
+  else
+  {
+    std::wstring ws = char8_to_wide(s);
+    WriteConsoleW(h,
+                  ws.c_str(),
+                  (DWORD)ws.size(),
+                  &dwNumberOfCharsWrite,
+                  NULL);
+  }
 }
 #endif
 
