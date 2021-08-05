@@ -1,5 +1,5 @@
-/* strconv.h v1.8.8                */
-/* Last Modified: 2021/07/29 21:42 */
+/* strconv.h v1.8.9                */
+/* Last Modified: 2021/08/06 08:35 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -369,7 +369,7 @@ static inline void dbgout(std::ostream &ostrm, const wchar_t *format, ...)
   DWORD dwNumberOfCharsWrite;
   if (GetFileType(h) != FILE_TYPE_CHAR)
   {
-    std::string s = wide_to_utf8(ws);
+    std::string s = wide_to_cp(ws, GetConsoleCP());
     WriteFile(h, s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
   }
   else
@@ -396,6 +396,7 @@ static inline void dbgout(std::ostream &ostrm, const char *format, ...)
   DWORD dwNumberOfCharsWrite;
   if (GetFileType(h) != FILE_TYPE_CHAR)
   {
+    s = utf8_to_cp(s, GetConsoleCP());
     WriteFile(h, s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
   }
   else
@@ -424,7 +425,8 @@ static inline void dbgout(std::ostream &ostrm, const char8_t *format, ...)
   DWORD dwNumberOfCharsWrite;
   if (GetFileType(h) != FILE_TYPE_CHAR)
   {
-    WriteFile(h, (const char *)s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
+    std::string str = char8_to_cp(s, GetConsoleCP());
+    WriteFile(h, (const char *)str.c_str(), (DWORD)str.size(), &dwNumberOfCharsWrite, NULL);
   }
   else
   {
