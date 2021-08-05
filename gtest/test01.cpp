@@ -283,7 +283,7 @@ TEST(MyTestCase, Test025) { // strconv.h v1.81
     EXPECT_EQ("\x8A\xBF\x8E\x9A=??", msg);
 }
 TEST(MyTestCase, Test026) { // get_wide_args(), get_utf8_args()
-    std::vector<const char *> utf8_args = get_utf8_args();
+    std::vector<char *> utf8_args = get_utf8_args();
     cxxopts::Options options("test", "A brief description");
     options.add_option("", {"b,bar", "Param bar", cxxopts::value<std::string>()});
     options.add_option("", {"d,debug", "Enable debugging", cxxopts::value<bool>()->default_value("false")});
