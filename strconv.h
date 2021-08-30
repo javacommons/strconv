@@ -1,5 +1,5 @@
-/* strconv.h v1.8.9                */
-/* Last Modified: 2021/08/06 08:35 */
+/* strconv.h v1.8.10               */
+/* Last Modified: 2021/08/30 21:53 */
 #ifndef STRCONV_H
 #define STRCONV_H
 
@@ -362,14 +362,12 @@ static inline void dbgout(std::ostream &ostrm, const wchar_t *format, ...)
   HANDLE h = handle_for_ostream(ostrm);
   if (h == INVALID_HANDLE_VALUE)
   {
-    std::string s = wide_to_utf8(ws);
-    ostrm << s << std::flush;
     return;
   }
   DWORD dwNumberOfCharsWrite;
   if (GetFileType(h) != FILE_TYPE_CHAR)
   {
-    std::string s = wide_to_cp(ws, GetConsoleCP());
+    std::string s = wide_to_cp(ws, GetConsoleOutputCP());
     WriteFile(h, s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
   }
   else
@@ -390,13 +388,12 @@ static inline void dbgout(std::ostream &ostrm, const char *format, ...)
   HANDLE h = handle_for_ostream(ostrm);
   if (h == INVALID_HANDLE_VALUE)
   {
-    ostrm << s << std::flush;
     return;
   }
   DWORD dwNumberOfCharsWrite;
   if (GetFileType(h) != FILE_TYPE_CHAR)
   {
-    s = utf8_to_cp(s, GetConsoleCP());
+    s = utf8_to_cp(s, GetConsoleOutputCP());
     WriteFile(h, s.c_str(), (DWORD)s.size(), &dwNumberOfCharsWrite, NULL);
   }
   else
@@ -419,13 +416,12 @@ static inline void dbgout(std::ostream &ostrm, const char8_t *format, ...)
   HANDLE h = handle_for_ostream(ostrm);
   if (h == INVALID_HANDLE_VALUE)
   {
-    ostrm << char8_to_utf8(s) << std::flush;
     return;
   }
   DWORD dwNumberOfCharsWrite;
   if (GetFileType(h) != FILE_TYPE_CHAR)
   {
-    std::string str = char8_to_cp(s, GetConsoleCP());
+    std::string str = char8_to_cp(s, GetConsoleOutputCP());
     WriteFile(h, (const char *)str.c_str(), (DWORD)str.size(), &dwNumberOfCharsWrite, NULL);
   }
   else
