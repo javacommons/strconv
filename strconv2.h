@@ -1,10 +1,11 @@
-/* strconv-again.h v1.0.0          */
-/* Last Modified: 2023/04/08 02:53 */
-#ifndef STRCONV_AGAIN_H
-#define STRCONV_AGAIN_H
+/* strconv2.h v1.0.0               */
+/* Last Modified: 2023/04/09 16:37 */
+#ifndef STRCONV2_H
+#define STRCONV2_H
 
 #include <stdarg.h>
 #include <windows.h>
+
 #include <codecvt>
 #include <iostream>
 #include <locale>
@@ -634,4 +635,4 @@ public:
 #define U32(X) (U##X)
 #define WIDE(X) (L##X)
 
-#endif /* STRCONV_AGAIN_H */
+#endif /* STRCONV2_H */
